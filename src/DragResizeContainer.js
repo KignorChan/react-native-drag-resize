@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import {
   View,
+  Platform
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -24,16 +25,27 @@ export class DragResizeContainer extends PureComponent {
         }}
         style={style}
         onLayout={() => {
-          this.canvas.measure(
-            (fx, fy, w, h, x, y) => {
-              onInit({
-                x: 0,
-                y: 0,
-                w,
-                h,
-              });
-            }
-          );
+          if(Platform.OS === "ios"){
+            this.canvas.measure(
+              (fx, fy, w, h, x, y) => {
+                onInit({
+                  x: 0,
+                  y: 0,
+                  w,
+                  h,
+                });
+              }
+            );
+          }else{
+            this.canvas.measureInWindow((x, y, w, h) => {
+                onInit({
+                  x: 0,
+                  y: 0,
+                  w,
+                  h,
+                });
+            });
+          }
         }}
       >
         {children}
